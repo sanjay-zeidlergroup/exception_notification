@@ -13,16 +13,16 @@ class TeamsNotifierTest < ActiveSupport::TestCase
 
     options = teams_notifier.call ArgumentError.new("foo"), options
 
-    body = ActiveSupport::JSON.decode options[:body]
-    assert body.key? "title"
-    assert body.key? "sections"
+    payload = ActiveSupport::JSON.decode options[:body]
+    assert payload.key? "type"
+    assert payload.key? "body"
 
-    sections = body["sections"]
-    header = sections[0]
+    body = payload["body"]
+    header = body[0]
+    title = body[1]
 
-    assert_equal 2, sections.size
-    assert_equal "A *ArgumentError* occurred.", header["activityTitle"]
-    assert_equal "foo", header["activitySubtitle"]
+    assert_equal 3, body.size
+    assert_equal "A *ArgumentError* occurred.", title["text"]
   end
 
   test "should send notification with create gitlab issue link if specified" do
@@ -35,12 +35,12 @@ class TeamsNotifierTest < ActiveSupport::TestCase
 
     options = teams_notifier.call ArgumentError.new("foo"), options
 
-    body = ActiveSupport::JSON.decode options[:body]
+    payload = ActiveSupport::JSON.decode options[:body]
 
-    potential_action = body["potentialAction"]
+    potential_action = payload["actions"]
     assert_equal 2, potential_action.size
-    assert_equal "🦊 View in GitLab", potential_action[0]["name"]
-    assert_equal "🦊 Create Issue in GitLab", potential_action[1]["name"]
+    assert_equal "🦊 View in GitLab", potential_action[0]["title"]
+    assert_equal "🦊 Create Issue in GitLab", potential_action[1]["title"]
   end
 
   test "should add other HTTParty options to params" do
@@ -69,9 +69,9 @@ class TeamsNotifierTest < ActiveSupport::TestCase
     teams_notifier.instance_variable_set(:@exception, exception)
     teams_notifier.instance_variable_set(:@options, {})
 
-    message_text = teams_notifier.send(:message_text)
-    header = message_text["sections"][0]
-    assert_equal "A *ArgumentError* occurred.", header["activityTitle"]
+    message_text = teams_notifier.send(:adaptive_card_payload)
+    header = message_text["body"][1]
+    assert_equal "A *ArgumentError* occurred.", header["text"]
   end
 
   test "should use direct errors count if :accumulated_errors_count option is 5" do
@@ -79,9 +79,9 @@ class TeamsNotifierTest < ActiveSupport::TestCase
     exception = ArgumentError.new("foo")
     teams_notifier.instance_variable_set(:@exception, exception)
     teams_notifier.instance_variable_set(:@options, accumulated_errors_count: 5)
-    message_text = teams_notifier.send(:message_text)
-    header = message_text["sections"][0]
-    assert_equal "5 *ArgumentError* occurred.", header["activityTitle"]
+    message_text = teams_notifier.send(:adaptive_card_payload)
+    header = message_text["body"][1]
+    assert_equal "5 *ArgumentError* occurred.", header["text"]
   end
 end
 
