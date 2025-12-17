@@ -61,9 +61,6 @@ module ExceptionNotifier
 
     private
 
-    # =========================
-    # Adaptive Card Root
-    # =========================
     def adaptive_card_payload
       {
         "type" => "AdaptiveCard",
@@ -74,9 +71,6 @@ module ExceptionNotifier
       }
     end
 
-    # =========================
-    # Card Body
-    # =========================
     def card_body
       body = []
 
@@ -127,9 +121,6 @@ module ExceptionNotifier
       }
     end
 
-    # =========================
-    # Facts
-    # =========================
     def request_fact
       {
         "title" => "Request",
@@ -151,9 +142,6 @@ module ExceptionNotifier
       }
     end
 
-    # =========================
-    # Actions
-    # =========================
     def card_actions
       actions = []
       actions << gitlab_view_link if @gitlab_url
@@ -196,9 +184,6 @@ module ExceptionNotifier
       }
     end
 
-    # =========================
-    # Helpers
-    # =========================
      def activity_title
       errors_count = @options[:accumulated_errors_count].to_i
 
