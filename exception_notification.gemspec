@@ -25,8 +25,8 @@ Gem::Specification.new do |s|
   ].reject { |f| File.directory?(f) }
   s.require_path = "lib"
 
-  s.add_dependency("actionmailer", ">= 7.1", "< 9")
-  s.add_dependency("activesupport", ">= 7.1", "< 9")
+  s.add_dependency("actionmailer", ">= 7.0", "< 9")
+  s.add_dependency("activesupport", ">= 7.0", "< 9")
 
   s.add_development_dependency "aws-sdk-sns", "~> 1"
   s.add_development_dependency "carrier-pigeon", ">= 0.7.0"
@@ -37,7 +37,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "mock_redis", "~> 0.19.0"
   s.add_development_dependency "net-smtp"
   s.add_development_dependency "ostruct"
-  s.add_development_dependency "rails", ">= 7.1", "< 9"
+  s.add_development_dependency "rails", ">= 7.0", "< 9"
   s.add_development_dependency "resque", "~> 1.8.0"
   s.add_development_dependency "sidekiq", ">= 5.0.4"
   s.add_development_dependency "slack-notifier", ">= 1.0.0"
